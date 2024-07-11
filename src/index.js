@@ -17,7 +17,7 @@ app.use("/", router);
 
 const server = app.listen(PORT, async () => {
     console.log("Listening on port: ", PORT);
-    
+
     connectWithDB().catch(() => {
         console.log("Error connecting MongoDB");
     });
