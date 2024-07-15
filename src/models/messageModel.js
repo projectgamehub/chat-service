@@ -3,18 +3,20 @@ import mongoose from "mongoose";
 const messageSchema = new mongoose.Schema(
     {
         senderId: {
-            type: mongoose.Schema.Types.ObjectId
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
         },
         content: {
             type: String,
-            trim: true
+            trim: true,
+            required: true
         },
-        chat: {
+        receiverId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Chat"
-        }
-    },
-    { timestamps: true }
+            required: true
+        },
+        timestamps: true
+    }
 );
 
 const Message = mongoose.model("Message", messageSchema);
