@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const chatSchema = new mongoose.Schema(
+const chatsSchema = new mongoose.Schema(
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -8,6 +8,9 @@ const chatSchema = new mongoose.Schema(
         },
         chattedWith: [
             {
+                messageListId: {
+                    type: mongoose.Schema.Types.ObjectId
+                },
                 chattedWithId: {
                     type: mongoose.Schema.Types.ObjectId
                 },
@@ -18,11 +21,13 @@ const chatSchema = new mongoose.Schema(
                     type: Date
                 }
             }
-        ],
+        ]
+    },
+    {
         timestamps: true
     }
 );
 
-const Chat = mongoose.model("Chat", chatSchema);
+const Chats = mongoose.model("Chats", chatsSchema);
 
-export default Chat;
+export default Chats;

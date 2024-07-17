@@ -2,7 +2,7 @@ import express from "express";
 import { errorMiddleware } from "../errors/errorMiddlewares/index.js";
 import { asyncEventHandler } from "../errors/errorUtils/index.js";
 import { verifyAccessToken } from "../middleware/index.js";
-import { chats } from "../controllers/index.js";
+import { getChats } from "../controllers/index.js";
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.get("/ping", (req, res) => {
 
 router.use(verifyAccessToken);
 
-router.get("/chats", asyncEventHandler(chats));
+router.get("/get-chats", asyncEventHandler(getChats));
 
 router.use(errorMiddleware);
 

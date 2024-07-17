@@ -1,5 +1,3 @@
-import chats from "./chats.js";
+import getChats from "./chatController/getChats.js";
 
-export {
-    chats
-}
+export { getChats };
