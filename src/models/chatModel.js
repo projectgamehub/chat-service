@@ -1,33 +1,20 @@
 import mongoose from "mongoose";
 
-const chatsSchema = new mongoose.Schema(
-    {
-        userId: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-        chattedWith: [
-            {
-                messageListId: {
-                    type: mongoose.Schema.Types.ObjectId
-                },
-                chattedWithId: {
-                    type: mongoose.Schema.Types.ObjectId
-                },
-                lastMessage: {
-                    type: String
-                },
-                lastMessageTime: {
-                    type: Date
-                }
+const chatSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    chats: [
+        {
+            otherUserId: { type: String, required: true },
+            lastMessage: { type: String },
+            lastMessageTimestamp: { type: Date },
+            messageListId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "MessageList"
             }
-        ]
-    },
-    {
-        timestamps: true
-    }
-);
+        }
+    ]
+});
 
-const Chats = mongoose.model("Chats", chatsSchema);
+const Chats = mongoose.model("Chat", chatSchema);
 
 export default Chats;

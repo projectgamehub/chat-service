@@ -1,7 +1,7 @@
 class customError extends Error {
-    constructor(statusCode = 500, message = "Something went wrong") {
+    constructor(statusCode, message = "Something went wrong") {
         super(message);
-        this.statusCode = statusCode;
+        this.statusCode = statusCode || 500;
         this.isOperational = true;
         Error.captureStackTrace(this, this.constructor);
     }

@@ -1,35 +1,14 @@
 import mongoose from "mongoose";
 
-const messageListSchema = new mongoose.Schema(
-    {
-        user1Id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-        user2Id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true
-        },
-        messages: [
-            {
-                content: {
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                senderId: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    required: true
-                },
-                time: {
-                    type: Date,
-                    required: true
-                }
-            }
-        ]
-    },
-    { timestamps: true }
-);
+const messageSchema = new mongoose.Schema({
+    content: { type: String, required: true },
+    senderId: { type: String, required: true },
+    timestamp: { type: Date, default: Date.now }
+});
+
+const messageListSchema = new mongoose.Schema({
+    messages: [messageSchema]
+});
 
 const MessageList = mongoose.model("MessageList", messageListSchema);
 

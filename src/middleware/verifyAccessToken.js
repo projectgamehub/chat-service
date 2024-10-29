@@ -8,17 +8,23 @@ const verifyAccessToken = asyncEventHandler(async (req, res, next) => {
         throw new customError(401, "Token is required");
     }
 
-    const verifiedTokenDetails = await axios.get(
-        USER_SERVICE_URL + "verify-token",
-        {
-            headers: {
-                "access-token": accessToken
+    try {
+        const verifiedTokenDetails = await axios.get(
+            USER_SERVICE_URL + "verify-token",
+            {
+                headers: {
+                    "access-token": accessToken
+                }
             }
-        }
-    );
-
-    req.senderId = verifiedTokenDetails?.data?.data?.id;
-    next();
+        );
+        req.senderId = verifiedTokenDetails?.data?.data?.id;
+        next();
+    } catch (error) {
+        throw new customError(
+            error?.response?.data?.error?.statusCode,
+            error?.response?.data?.message
+        );
+    }
 });
 
 export default verifyAccessToken;
