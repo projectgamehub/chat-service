@@ -1,25 +1,25 @@
-import chatRepository from "../repository/chatRepository.js";
 import messageListRepository from "../repository/messageListRepository.js";
 
 class ChatService {
     async getChats(userId) {
-        const chat = await chatRepository.findChatsByUserId(userId);
-
-        return chat
-            ? chat.chats.map((c) => ({
-                  otherUserId: c.otherUserId,
-                  lastMessage: c.lastMessage,
-                  lastMessageTimestamp: c.lastMessageTimestamp
-              }))
-            : [];
+        const chat = await messageListRepository.findAllChatsForUser(userId);
+        return chat || [];
     }
 
     async getConversation(userId, otherUserId) {
-        const chat = await chatRepository.findChatBetweenUsers(
+        // Find the MessageList document directly based on user1Id and user2Id
+        const messageList = await messageListRepository.findMessageListByUsers(
             userId,
             otherUserId
         );
-        return chat ? chat.chats[0].messageListId.messages : [];
+
+        // If no MessageList document is found, return an empty array
+        if (!messageList) {
+            return [];
+        }
+
+        // Return the messages array from the found MessageList document
+        return messageList.messages;
     }
 
     async sendMessage(userId, otherUserId, messageContent) {
@@ -30,48 +30,35 @@ class ChatService {
             timestamp
         };
 
-        let chat = await chatRepository.findChatBetweenUsers(
+        // Find or create a MessageList between the two users
+        let messageList = await messageListRepository.findMessageListByUsers(
             userId,
             otherUserId
         );
 
-        if (!chat) {
-            const newMessageList =
-                await messageListRepository.createMessageList(message);
-            await chatRepository.createOrUpdateChat(
-                userId,
-                otherUserId,
-                messageContent,
-                timestamp,
-                newMessageList._id
-            );
-            await chatRepository.createOrUpdateChat(
-                otherUserId,
-                userId,
-                messageContent,
-                timestamp,
-                newMessageList._id
-            );
+        if (!messageList) {
+            // Create a new MessageList if one doesn't exist between userId and otherUserId
+            messageList = await messageListRepository.createNewMessageList({
+                user1Id: userId,
+                user2Id: otherUserId,
+                messages: [message],
+                lastMessage: messageContent,
+                lastMessageTimestamp: timestamp
+            });
         } else {
-            await messageListRepository.addMessage(
-                chat.chats[0].messageListId,
+            // If MessageList exists, add the new message and update lastMessage and timestamp
+            await messageListRepository.addMessageToMessageList(
+                messageList._id,
                 message
             );
-            await chatRepository.createOrUpdateChat(
-                userId,
-                otherUserId,
+            await messageListRepository.updateLastMessage(
+                messageList._id,
                 messageContent,
-                timestamp,
-                chat.chats[0].messageListId
-            );
-            await chatRepository.createOrUpdateChat(
-                otherUserId,
-                userId,
-                messageContent,
-                timestamp,
-                chat.chats[0].messageListId
+                timestamp
             );
         }
+
+        return message;
     }
 }
 

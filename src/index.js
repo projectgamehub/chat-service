@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import router from "./routes/index.js";
 import { PORT } from "./config/index.js";
-import { connectWithDB } from "./utils/index.js";
+import { connectWithDB, socketHandler } from "./utils/index.js";
+import { Server as SocketIO } from "socket.io";
 
 const app = express();
 
@@ -22,6 +23,16 @@ const server = app.listen(PORT, async () => {
         console.log("Error connecting MongoDB");
     });
 });
+
+// TODO Configure this CORS later
+const io = new SocketIO(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+socketHandler(io);
 
 process.on("unhandledRejection", (err) => {
     console.log(`Unhandled rejection ${err.name} occurred`);
