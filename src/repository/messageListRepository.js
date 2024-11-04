@@ -1,24 +1,6 @@
 import MessageList from "../models/messageListModel.js";
 
 class MessageListRepository {
-    // async findMessagesByMessageListId(messageListId) {
-    //     const messageList = await MessageList.findById(messageListId);
-    //     return messageList ? messageList.messages : [];
-    // }
-
-    // async createNewMessageList(initialMessage) {
-    //     const newMessageList = new MessageList({ messages: [initialMessage] });
-    //     return await newMessageList.save();
-    // }
-
-    // async addMessageToMessageList(messageListId, message) {
-    //     return MessageList.findByIdAndUpdate(
-    //         messageListId,
-    //         { $push: { messages: message } },
-    //         { new: true }
-    //     );
-    // }
-
     async findMessageListByUsers(user1Id, user2Id) {
         return MessageList.findOne({
             $or: [
