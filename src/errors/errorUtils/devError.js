@@ -3,7 +3,8 @@ const devError = (res, err) => {
         success: false,
         message: err.message,
         error: err,
-        stackTrace: err.stack
+        stackTrace: err.stack,
+        statusCode: err.statusCode
     });
 };
 
