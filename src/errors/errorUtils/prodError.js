@@ -9,7 +9,7 @@ const prodError = (res, err) => {
         res.status(500).json({
             success: false,
             message: "Something went wrong, please try again later!",
-            statusCode: err.statusCode
+            statusCode: 500
         });
     }
 };
