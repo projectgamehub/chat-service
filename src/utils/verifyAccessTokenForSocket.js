@@ -4,7 +4,7 @@ import { USER_SERVICE_URL } from "../config/index.js";
 const verifyAccessTokenForSocket = async (accessToken) => {
     try {
         const verifiedTokenDetails = await axios.get(
-            USER_SERVICE_URL + "verify-token",
+            USER_SERVICE_URL + "/verify-token",
             {
                 headers: {
                     "access-token": accessToken

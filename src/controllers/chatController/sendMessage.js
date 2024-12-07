@@ -13,7 +13,7 @@ const sendMessage = async (req, res) => {
     const otherUserId = req.params.userId;
 
     try {
-        await axios.get(USER_SERVICE_URL + "get-username-by-id/" + otherUserId);
+        await axios.get(USER_SERVICE_URL + "/get-username-by-id/" + otherUserId);
     } catch (error) {
         throw new customError(
             400,

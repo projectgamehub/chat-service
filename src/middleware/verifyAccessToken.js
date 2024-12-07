@@ -10,7 +10,7 @@ const verifyAccessToken = asyncEventHandler(async (req, _, next) => {
 
     try {
         const verifiedTokenDetails = await axios.get(
-            USER_SERVICE_URL + "verify-token",
+            USER_SERVICE_URL + "/verify-token",
             {
                 headers: {
                     "access-token": accessToken
