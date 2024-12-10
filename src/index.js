@@ -21,8 +21,8 @@ app.use("/", router);
 const sslOptions =
     NODE_ENV === "production"
         ? {
-            key: fs.readFileSync("/etc/letsencrypt/live/game-hub.duckdns.org/privkey.pem"),
-            cert: fs.readFileSync("/etc/letsencrypt/live/game-hub.duckdns.org/fullchain.pem"),
+            key: fs.readFileSync("./certs/privkey.pem"),
+            cert: fs.readFileSync("./certs/fullchain.pem"),
         }
         : {
             key: fs.readFileSync("./certs/localhost-key.pem"),
