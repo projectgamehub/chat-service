@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
 import router from "./routes/index.js";
-import { PORT } from "./config/index.js";
+import { NODE_ENV, PORT } from "./config/index.js";
 import { connectWithDB, socketHandler } from "./utils/index.js";
 import { Server as SocketIO } from "socket.io";
+import https from "https";
+import fs from "fs";
 
 const app = express();
 
@@ -16,8 +18,21 @@ app.use(express.json());
 
 app.use("/", router);
 
-const server = app.listen(PORT, async () => {
-    console.log("Listening on port: ", PORT);
+const sslOptions =
+    NODE_ENV === "production"
+        ? {
+            key: fs.readFileSync("/etc/letsencrypt/live/game-hub.duckdns.org/privkey.pem"),
+            cert: fs.readFileSync("/etc/letsencrypt/live/game-hub.duckdns.org/fullchain.pem"),
+        }
+        : {
+            key: fs.readFileSync("./certs/localhost-key.pem"),
+            cert: fs.readFileSync("./certs/localhost-cert.pem"),
+        };
+
+const server = https.createServer(sslOptions, app);
+
+server.listen(PORT, async () => {
+    console.log("HTTPS server listening on port: ", PORT);
 
     connectWithDB().catch(() => {
         console.log("Error connecting MongoDB");
